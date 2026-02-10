@@ -25,7 +25,6 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.database.ContentObserver;
 import android.graphics.Rect;
 import android.icu.lang.UCharacter;
 import android.icu.text.DateTimePatternGenerator;
@@ -134,7 +133,6 @@ public class Clock extends TextView implements
 
     private int mAmPmStyle = AM_PM_STYLE_GONE;
     private boolean mShowSeconds;
-    private ContentObserver mContentObserver;
     private Handler mSecondsHandler;
     private int mClockDateDisplay = CLOCK_DATE_DISPLAY_GONE;
     private int mClockDateStyle = CLOCK_DATE_STYLE_REGULAR;
@@ -173,8 +171,9 @@ public class Clock extends TextView implements
                 R.styleable.Clock,
                 0, 0);
         try {
-            mAmPmStyle = LineageSettings.System.getIntForUser(mContext.getContentResolver(),
-                    LineageSettings.System.STATUS_BAR_AM_PM, AM_PM_STYLE_GONE, UserHandle.USER_CURRENT);
+            mAmPmStyle = LineageSettings.System.getIntForUser(
+                context.getContentResolver(), LineageSettings.System.STATUS_BAR_AM_PM,
+                AM_PM_STYLE_GONE, UserHandle.USER_CURRENT);
             mIsStatusBar = a.getBoolean(R.styleable.Clock_isStatusBar, mIsStatusBar);
             mNonAdaptedColor = getCurrentTextColor();
         } finally {
@@ -475,12 +474,6 @@ public class Clock extends TextView implements
                 reloadDimens();
             }
         }
-    }
-
-    private int readClockAmPm(Context context) {
-        return LineageSettings.System.getIntForUser(
-                context.getContentResolver(), LineageSettings.System.STATUS_BAR_AM_PM,
-                AM_PM_STYLE_GONE, UserHandle.USER_CURRENT);
     }
 
     private void updateShowSeconds() {
